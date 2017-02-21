@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+  <node pkg="robotnik_rc_controller" type="robotnik_rc_controller" name="robotnik_rc_controller" output="screen" respawn="true"> 
+	<param name="topic_cmd_vel" value="/cmd_vel"/>
+	<param name="topic_rc_in" value="/mavros/rc/in"/>  
+	<param name="dead_zone" value="0.05"/>  	
+  </node>
+</launch>

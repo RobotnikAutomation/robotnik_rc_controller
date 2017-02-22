@@ -109,13 +109,6 @@ class robotnik_rc_controller: public RComponent{
 		
 		// TBD : additional safety can be added by processing rssi that is in the RCIn msg.
 		double range = MAX_VAL - MIN_VAL;
-		/* int i=0; 
-		 * for(std::vector<int>::const_iterator it = rc_in->channels.begin(); it != rc_in->channels.end(); ++it) {
-			channels[i] = *it;
-			if (channels[i] > MAX_VAL) channels[i] = MAX_VAL;
-			if (channels[i] < MIN_VAL) channels[i] = MIN_VAL;
-			i++;
-			}*/
 
 		if (rc_in->channels.size()<6) {
 			ROS_ERROR("rcInCallback - incomplete message received");
@@ -145,17 +138,17 @@ class robotnik_rc_controller: public RComponent{
 		S1 -> c15, center 982, up: incremental up to 1494, down: 982
 		S2 -> c16, center 2006, up: 2006, down: decremental up to 1508 */
 		
-		double level = (MAX_VAL - (double) channels[DEFAULT_CH_LEVEL]) / range;  			// conversions of level - 0.0 ... 1.0	
-		double x = ((double) channels[DEFAULT_CH_X] - CEN_VAL) / (range/2.0);       		// conversion of speed  982 (-1.0) up 2006.0 (+1.0)	
+		double level = ((double) channels[DEFAULT_CH_LEVEL-1] - MIN_VAL) / range;  			// conversions of level - 0.0 ... 1.0	
+		double x = ((double) channels[DEFAULT_CH_X-1] - CEN_VAL) / (range/2.0);       		// conversion of speed  982 (-1.0) up 2006.0 (+1.0)	
 		if ((x>-dead_zone_)&&(x<dead_zone_)) x=0.0;
 		ch_x_ = x * level * scale_x_;
-		double y = -1.0 * ((double) channels[DEFAULT_CH_Y] - CEN_VAL) / (range/2.0);
+		double y = -1.0 * ((double) channels[DEFAULT_CH_Y-1] - CEN_VAL) / (range/2.0);
 		if ((y>-dead_zone_)&&(y<dead_zone_)) y=0.0;
 		ch_y_ = y * level * scale_y_;		
-		double w = -1.0 * ((double) channels[DEFAULT_CH_W] - CEN_VAL) / (range/2.0);
+		double w = -1.0 * ((double) channels[DEFAULT_CH_W-1] - CEN_VAL) / (range/2.0);
 		if ((w>-dead_zone_)&&(w<dead_zone_)) y=0.0;
 		ch_w_ = w * level * scale_w_;
-		if (channels[DEFAULT_CH_TAKE_OVER] > CEN_VAL) take_over_ = false;	// channel with 2 positions
+		if (channels[DEFAULT_CH_TAKE_OVER-1] > CEN_VAL) take_over_ = false;	// channel with 2 positions
 		else take_over_ = true;
 		}
 
